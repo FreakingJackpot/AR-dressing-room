@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { margin: 0; padding: 0; font-size: 0; }
+        canvas { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.js"></script>
+<script>
+    navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function(stream) {
+        rawVideoStream = stream;
+        videoSettings = stream.getVideoTracks()[0].getSettings();
+        let video = document.createElement("video");
+        Object.assign(video, {
+            srcObject: stream,
+            width: videoSettings.width,
+            height: videoSettings.height,
+            autoplay: true,
+        })
+        videoTexture = new THREE.VideoTexture(video);
+        var WIDTH = window.innerWidth;
+        var HEIGHT = window.innerHeight;
+
+        var renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setClearColor(0xDDDDDD, 1);
+        document.body.appendChild(renderer.domElement);
+
+        var scene = new THREE.Scene();
+
+        scene.background=videoTexture;
+
+        var camera = new THREE.PerspectiveCamera(70, WIDTH/HEIGHT);
+        camera.position.z = 50;
+        scene.add(camera);
+
+        var frontSpot = new THREE.SpotLight(0xeeeece);
+        frontSpot.position.set(1000, 1000, 1000);
+        scene.add(frontSpot);
+        var frontSpot2 = new THREE.SpotLight(0xddddce);
+        frontSpot2.position.set(-300, -300, -300);
+        scene.add(frontSpot2);
+
+
+        var geometry = new THREE.TorusGeometry( 10, 3, 20, 100 );
+        var material = new THREE.MeshPhongMaterial( {
+            color: 0xdaa520,
+            specular: 0xbcbcbc,
+        } );
+        var mesh = new THREE.Mesh( geometry, material)
+        mesh.position=
+
+        scene.add( mesh );
+        function render() {
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+        render();
+
+    });
+
+
+
+
+</script>
+</body>
+</html>
