@@ -64,7 +64,7 @@ navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function (
 
         }
     );
-    function setrotationandposition (response) { // вешаем свой обработчик на функцию succes
+    function setrotationandposition (response) {
         let i = Math.floor(Math.random() * Math.floor(21));
         let object=scene.getObjectByName('lol');
        object.position.set(response['positions'][i][0]*100,response['positions'][i][1]*100,response['positions'][i][2]*100);
