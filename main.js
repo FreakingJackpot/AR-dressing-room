@@ -1,5 +1,6 @@
 import * as THREE from './node_modules/three/src/Three.js';
 import {OBJLoader} from './node_modules/three/examples/jsm/loaders/OBJLoader.js';
+import {GUI} from './node_modules/three/examples/jsm/libs/dat.gui.module.js'
 
 navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function (stream) {
     let rawVideoStream = stream;
@@ -63,13 +64,21 @@ navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function (
             console.log('An error happened');
 
         }
+
+
     );
-    function setrotationandposition (response) { // вешаем свой обработчик на функцию succes
-        let i = Math.floor(Math.random() * Math.floor(21));
+        let i = {};
+        i.value = 0;
+        const gui = new GUI()
+        const RingFolder = gui.addFolder("Ring");
+        RingFolder.add(i, "value", 0, 20, 1);
+        RingFolder.open();
+
+    function setrotationandposition (response) {
         let object=scene.getObjectByName('lol');
-       object.position.set(response['positions'][i][0]*100,response['positions'][i][1]*100,response['positions'][i][2]*100);
-       const quaternion = new THREE.Quaternion().fromArray(response['rotations'][i]);
-       object.rotation.setFromQuaternion(quaternion);
+        object.position.set(response['positions'][i.value][0]*20,response['positions'][i.value][1]*20,response['positions'][i.value][2]*20);
+        const quaternion = new THREE.Quaternion().fromArray(response['rotations'][i.value]);
+        object.rotation.setFromQuaternion(quaternion);
 
     }
 
@@ -81,8 +90,6 @@ navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function (
             success : setrotationandposition,
         });
 
-
-
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
@@ -90,3 +97,4 @@ navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function (
     render();
 
 });
+

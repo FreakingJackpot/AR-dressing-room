@@ -4,6 +4,8 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "@types/dat.gui": "^0.7.6",
+    "http-server": "^0.12.3",
     "jquery": "^3.5.1",
     "three": "^0.122.0"
   },
