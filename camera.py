@@ -35,10 +35,10 @@ while(True):
     """
     #отправка размера кадра приложению
     result, encimg = cv2.imencode('.jpg', frame)
-    client.send(str(len(encimg.flatten())).encode('utf-8'))
+    client.sendall(str(len(encimg.flatten())).encode('utf-8'))
 
     #отправка изображения
-    client.send(encimg)
+    client.sendall(encimg)
 
     #отправка массивов npy в json
     lpoints = np.load('joint_location.npy').tolist()
@@ -46,7 +46,7 @@ while(True):
     data = json.dumps({"positions": lpoints,
                        "rotations": rpoints})
 
-    client.send(data.encode())
+    client.sendall(data.encode())
 
 # When everything done, release the capture
 cap.release()
