@@ -571,7 +571,6 @@ GameObject:
   - component: {fileID: 880100979}
   - component: {fileID: 880100982}
   - component: {fileID: 880100981}
-  - component: {fileID: 880100980}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -599,21 +598,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &880100980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 880100978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9441367fb84b90d47b1cf33e133025c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camTexture: {fileID: 0}
-  Raw: {fileID: 880100981}
-  fit: {fileID: 0}
 --- !u!114 &880100981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,7 +859,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1827496014}
-        m_MethodName: da
+        m_MethodName: Quit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1040,10 +1024,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beef28f3a3f57b741a2de6b55d9e78fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rawImage: {fileID: 880100981}
+  ImageSize: 
+  Len: 0
+  Image: 
   posePreset: 0
   rotationPreset: 0
   canvas: {fileID: 2134884439}
+  rawImage: {fileID: 880100981}
   ring: {fileID: 59748160}
   pose: {fileID: 1220766757}
   rot: {fileID: 429894381}
