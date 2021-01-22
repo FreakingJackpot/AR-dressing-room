@@ -1,5 +1,6 @@
 ﻿using SimpleJSON;
 using System;
+using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -8,6 +9,12 @@ using UnityEngine;
 using UnityEngine.UI;
 public class RequestManager : MonoBehaviour
 {
+
+    int width = 0;
+    int height = 0;
+
+    JSONNode Size;
+
     Socket socket;
     IPAddress iP;
     IPEndPoint iPEnd;
@@ -47,11 +54,21 @@ public class RequestManager : MonoBehaviour
 
     void SocketConnect()
     {
+
         if (socket != null)
             socket.Close();
 
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Connect(iPEnd);
+
+        byte[] size = new byte[2048];
+        socket.Receive(size);
+
+        string bitString = System.Text.Encoding.UTF8.GetString(size);
+        Size = JSON.Parse(bitString);
+
+        width = Size["width"];
+        height = Size["height"];
     }
 
     void SocketReceive()
@@ -72,22 +89,20 @@ public class RequestManager : MonoBehaviour
                 else
                 {
                     int recv_len = Convert.ToInt32(Encoding.ASCII.GetString(ImageSize, 0, Len));
+
                     Image = new byte[recv_len];
-
-                    int img_len = socket.Receive(Image);
-                    if (recv_len != img_len)
+                    int img_len = 0;
+                    while (img_len != recv_len)
                     {
-                        Debug.Log("Битый кадр был отправлен");
+                        img_len += socket.Receive(Image, img_len, recv_len - img_len, SocketFlags.None);
                     }
-                    else
-                    {
-                        changePic = true;
-                        Transform = new byte[4096];
-                        socket.Receive(Transform);
 
-                        string bitString = System.Text.Encoding.UTF8.GetString(Transform);
-                        data = JSON.Parse(bitString);
-                    }
+                    changePic = true;
+                    Transform = new byte[4096];
+                    socket.Receive(Transform);
+
+                    string bitString = System.Text.Encoding.UTF8.GetString(Transform);
+                    data = JSON.Parse(bitString);
                 }
             }
             catch
@@ -111,10 +126,11 @@ public class RequestManager : MonoBehaviour
 
     private void Start()
     {
-        rawImage.texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+
         pose.text = a + posePreset.ToString();
         rot.text = b + rotationPreset.ToString();
         InitSocket();
+        StartCoroutine(WaitForSize());
     }
 
     void Update()
@@ -165,5 +181,17 @@ public class RequestManager : MonoBehaviour
     {
         SocketClose();
         Application.Quit();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SocketClose();
+    }
+
+    IEnumerator WaitForSize()
+    {
+        yield return new WaitUntil(() => width != 0);
+        Screen.SetResolution(width, height, false);
+        rawImage.texture = new Texture2D(width, height, TextureFormat.RGB24, false);
     }
 }
