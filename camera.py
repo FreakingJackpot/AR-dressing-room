@@ -9,7 +9,7 @@ import sys
 
 
 cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
-
+ret, frame = cap.read()
 
 HOST = "127.0.0.1"
 PORT=9000
@@ -20,10 +20,12 @@ sock.bind((HOST,PORT))
 sock.listen(1)
 client,addr=sock.accept()
 
+data =json.dumps({'width':frame.shape[1],'height':frame.shape[0]})
+client.sendall(data.encode())
+
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
-
     # Our operations on the frame come here
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
